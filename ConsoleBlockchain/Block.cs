@@ -62,10 +62,12 @@ namespace ConsoleBlockchain
 
     public class BlockChain
     {
+        public decimal previousBalance { get; set; }
         public List<Block> Chain { get; set; }
 
-        public BlockChain()
+        public BlockChain(decimal bal)
         {
+            this.previousBalance = bal;
             this.Chain = new List<Block>();
         }
 
@@ -79,10 +81,51 @@ namespace ConsoleBlockchain
             this.Chain.Add(block);
         }
 
+        public decimal FindDeposits(string person)
+        {
+            Dictionary<string, decimal> accounts = new Dictionary<string, decimal>();
+
+            foreach (Block block in this.Chain)
+            {
+                // try to add account
+                if (!accounts.TryAdd(block.Data.Payer, block.Data.Amount))
+                {
+                    // account already exists, update value
+                    decimal balance = 0;
+                    accounts.TryGetValue(block.Data.Payer, out balance);
+                    accounts[block.Data.Payer] = balance + block.Data.Amount;
+                };
+            }
+
+            decimal value = 0;
+            accounts.TryGetValue(person, out value);
+            return value;
+        }
+
+        public decimal FindWithdrawls(string person)
+        {
+            Dictionary<string, decimal> accounts = new Dictionary<string, decimal>();
+
+            foreach (Block block in this.Chain)
+            {
+                // try to add account
+                if (!accounts.TryAdd(block.Data.Payee, block.Data.Amount))
+                {
+                    // account already exists, update value
+                    decimal balance = 0;
+                    accounts.TryGetValue(block.Data.Payee, out balance);
+                    accounts[block.Data.Payee] = balance + block.Data.Amount;
+                };
+            }
+
+            decimal value = 0;
+            accounts.TryGetValue(person, out value);
+            return value;
+        }
+
         public decimal FindBalance(string person)
         {
-
-            return 0.0m;
+            return FindDeposits(person) - FindWithdrawls(person);
         }
     }
 

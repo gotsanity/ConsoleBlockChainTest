@@ -2,16 +2,15 @@
 
 using ConsoleBlockchain;
 
-Payload payload = new Payload(DateTime.Now, 100.00m, "me", "you", "birthday");
-Payload payload2 = new Payload(DateTime.Now, 100.00m, "you", "them", "games");
-Payload payload3 = new Payload(DateTime.Now, 50.00m, "us", "them", "games");
-Payload payload4 = new Payload(DateTime.Now, 50.00m, "they", "them", "games");
+Payload payload = new Payload(DateTime.Now, 100.00m, "jesse", "mike", "birthday");
+Payload payload2 = new Payload(DateTime.Now, 100.00m, "sarah", "bob", "games");
+Payload payload3 = new Payload(DateTime.Now, 50.00m, "tim", "bob", "games");
+Payload payload4 = new Payload(DateTime.Now, 50.00m, "travis", "bob", "games");
 
-BlockChain chain = new BlockChain();
+BlockChain chain = new BlockChain(100.0m);
 
 chain.AddBlock(payload);
 chain.AddBlock(payload2);
-chain.AddBlock(payload3);
 chain.AddBlock(payload3);
 chain.AddBlock(payload4);
 
@@ -21,7 +20,10 @@ for (int i = 0; i < chain.Chain.Count; i++)
 }
 
 
-
+Console.WriteLine("Mike deposits: " + chain.FindDeposits("mike")); // 100
+Console.WriteLine("Bob deposits: " + chain.FindDeposits("bob")); // 200
+Console.WriteLine("Jesse withdrew: " + chain.FindWithdrawls("jesse"));
+Console.WriteLine("Jesse balance: " + chain.FindBalance("jesse"));
 
 
 
